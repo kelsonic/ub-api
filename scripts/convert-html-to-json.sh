@@ -20,7 +20,7 @@ JSON_DIR="$ROOT_DIR/data/json"
 
 # Include the other scripts
 source "$ROOT_DIR/scripts/merge-json.sh"
-source "$ROOT_DIR/scripts/zip-json-files.sh"
+# source "$ROOT_DIR/scripts/zip-json-files.sh"
 
 echo "Starting the conversion process..."
 
@@ -107,9 +107,9 @@ else
     done
 fi
 
-# For the "all" case, zip the files only once at the end
-if [ "$LANGUAGES" == "all" ]; then
-    zip_files_logic
-fi
+# # For the "all" case, zip the files only once at the end
+# if [ "$LANGUAGES" == "all" ]; then
+#     zip_files_logic
+# fi
 
-echo "✅ Finished the conversion process! 🎉"
+echo "🎉 Finished!"

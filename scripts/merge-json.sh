@@ -58,7 +58,7 @@ with open(json_file, 'r') as f2:
 data1.append(data2)
 
 with open(combined_file, 'w') as f1:
-    json.dump(data1, f1)
+    json.dump(data1, f1, indent=2)
 EOF
 
             # Increment the merged file counter for the loader
@@ -97,5 +97,5 @@ EOF
         done
     fi
 
-    echo "✅ Finished the merging process! 🎉"
+    echo "✅ Finished the merging process!"
 }
