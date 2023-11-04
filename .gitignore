@@ -1,0 +1,16 @@
+node_modules
+
+# Keep environment variables out of version control
+.env
+
+# Logs
+combined.log
+error.log
+yarn-error.log
+
+# OS generated files
+.DS_Store
+
+# Script generated files
+data/html/temp.json
+data/json/urantia-book-json
