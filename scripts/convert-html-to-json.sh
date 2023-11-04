@@ -77,7 +77,7 @@ process_directory() {
     done
     printf "\n"  # Move to the next line after progress bar completion
 
-    echo "✅ Finished processing $dir directory!"
+    echo "✅ Completed processing $dir directory!"
     echo "Clearing memory..."
     sync
 }

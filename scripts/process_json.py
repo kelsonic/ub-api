@@ -22,44 +22,100 @@ def flatten_json(data):
     def extract_numbers_from_id(_id, count=3):
         return ".".join(_id[1:].split("_", count)[:count])  # _id[1:] strips the 'U'
 
-    # Helper function to extract content within parentheses
-    def extract_content_within_parentheses(text):
-        match = re.search(r"\(([^)]+)\)", text)
-        return match.group(1) if match else text
+    # Helper function to create a friendly reference based on the paperId
+    def create_friendly_paper_reference(paper_id):
+        if paper_id == "0":
+            return "Foreword"
+        else:
+            return "Paper " + paper_id
+
+    def create_friendly_section_reference(section_id):
+        if section_id == "0":
+            return "Intro"
+        else:
+            return "Section " + section_id
+
+    def create_friendly_paragraph_reference(paragraph_id):
+        if paragraph_id == "0":
+            return "First Paragraph"
+        else:
+            return "Paragraph " + paragraph_id
+
+    def zero_pad(number, length):
+        """Pad the number with zeros up to the specified length."""
+        return str(number).zfill(length)
+
+    def create_sort_key(paper_id, section_id=None, paragraph_id=None):
+        """Create a sort key with padded paper, section, and paragraph ids."""
+        # Assuming max lengths for paperId, sectionId, and paragraphId are 3 digits.
+        paper_key = zero_pad(paper_id, 4)
+        section_key = zero_pad(section_id if section_id is not None else 0, 3)
+        paragraph_key = zero_pad(paragraph_id if paragraph_id is not None else 0, 3)
+        return f"{paper_key}.{section_key}.{paragraph_key}"
 
     # Extract the paper node
+    paper_id = extract_numbers_from_id(data["id"], 1)
     paper_node = {
-        "paperId": extract_numbers_from_id(data["id"], 1),
-        "type": "paper",
+        "friendlyReference": create_friendly_paper_reference(paper_id),
+        "friendlyReferenceShort": f"{paper_id}:0.0",
+        "globalId": f"{paper_id}:-.-",
+        "htmlText": None,
+        "language": "eng",
+        "paperId": paper_id,
+        "paperSectionId": None,
+        "paperSectionParagraphId": None,
+        "paragraphId": None,
+        "sectionId": None,
+        "sortId": create_sort_key(paper_id),
+        "text": None,
         "title": data["title"],
+        "type": "paper",
     }
     flattened.append(paper_node)
 
     # Loop through each section
     for section in data["sections"]:
         # Extract the section node
-        section_id = extract_numbers_from_id(section["id"], 2)
+        paper_section_id = extract_numbers_from_id(section["id"], 2)
+        section_id = paper_section_id.split(".", 1)[1]
         section_node = {
+            "friendlyReference": f"{create_friendly_paper_reference(paper_id)}, {create_friendly_section_reference(section_id)}",
+            "friendlyReferenceShort": f"{paper_id}:{section_id}.0",
+            "globalId": f"{paper_id}:{section_id}.-",
+            "htmlText": None,
+            "language": "eng",
             "paperId": paper_node["paperId"],
-            "paperSectionId": section_id,
-            "type": "section",
+            "paperSectionId": paper_section_id,
+            "paperSectionParagraphId": None,
+            "paragraphId": None,
+            "sectionId": section_id,
+            "sortId": create_sort_key(paper_id, section_id),
+            "text": None,
             "title": section.get("title", None),
+            "type": "section",
         }
         flattened.append(section_node)
 
         # Loop through each paragraph in the section
         for paragraph in section["paragraphs"]:
             # Extract the paragraph node
+            paper_section_paragraph_id = extract_numbers_from_id(paragraph["id"], 3)
+            paragraph_id = paper_section_paragraph_id.split(".", 2)[2]
             paragraph_node = {
+                "friendlyReference": f"{create_friendly_paper_reference(paper_id)}, {create_friendly_section_reference(section_id)}, {create_friendly_paragraph_reference(paragraph_id)}",
+                "friendlyReferenceShort": f"{paper_id}:{section_id}.{paragraph_id}",
+                "globalId": f"{paper_id}:{section_id}.{paragraph_id}",
+                "htmlText": paragraph.get("htmlText", None),
+                "language": "eng",
                 "paperId": paper_node["paperId"],
                 "paperSectionId": section_node["paperSectionId"],
-                "paragraphId": extract_numbers_from_id(paragraph["id"], 3),
-                "globalParagraphId": extract_content_within_parentheses(
-                    paragraph["reference"]
-                ),
-                "type": "paragraph",
+                "paperSectionParagraphId": paper_section_paragraph_id,
+                "paragraphId": paragraph_id,
+                "sectionId": section_id,
+                "sortId": create_sort_key(paper_id, section_id, paragraph_id),
                 "text": paragraph.get("text", None),
-                "htmlText": paragraph.get("htmlText", None),
+                "title": None,
+                "type": "paragraph",
             }
             flattened.append(paragraph_node)
 

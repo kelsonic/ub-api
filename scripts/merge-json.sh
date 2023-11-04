@@ -76,7 +76,7 @@ EOF
         # Remove the temp.json file
         rm -f "temp.json"
 
-        echo "✅ Finished merging JSON files in $lang_dir directory!"
+        echo "✅ Completed merging JSON files in $lang_dir directory!"
     }
 
     # Process directories based on specified languages
@@ -97,5 +97,5 @@ EOF
         done
     fi
 
-    echo "✅ Finished the merging process!"
+    echo "✅ Completed the merging process!"
 }

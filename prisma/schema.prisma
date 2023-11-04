@@ -7,46 +7,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model UBPaper {
-  createdAt DateTime @default(now())
-  id        String   @id @default(cuid())
-  number    Int      @unique
-  title     String   @unique
-  updatedAt DateTime @updatedAt
+enum UBNodeLanguage {
+  eng
+}
 
-  ubParagraphs UBParagraph[]
-  ubSections   UBSection[]
+enum UBNodeType {
+  Paragraph
+  Section
+  Paper
+}
+
+model UBNode {
+  createdAt         DateTime       @default(now())
+  globalParagraphId String?
+  htmlText          String?
+  id                String         @id @default(cuid())
+  language          UBNodeLanguage
+  paperId           String?
+  paperSectionId    String?
+  paragraphId       String?
+  text              String?
+  title             String         @unique
+  type              UBNodeType
+  updatedAt         DateTime       @updatedAt
 
   @@map("ub_papers")
-}
-
-model UBSection {
-  createdAt DateTime @default(now())
-  id        String   @id @default(cuid())
-  paperId   String
-  title     String
-  updatedAt DateTime @updatedAt
-
-  ubPaper      UBPaper       @relation(fields: [paperId], references: [id])
-  ubParagraphs UBParagraph[]
-
-  @@unique([paperId, title])
-  @@map("ub_sections")
-}
-
-model UBParagraph {
-  createdAt DateTime @default(now())
-  id        String   @id @default(cuid())
-  paperId   String
-  reference String   @unique
-  sectionId String
-  text      String
-  updatedAt DateTime @updatedAt
-
-  ubPaper UBPaper   @relation(fields: [paperId], references: [id])
-  section UBSection @relation(fields: [sectionId], references: [id])
-
-  @@map("ub_paragraphs")
 }
 
 model User {
