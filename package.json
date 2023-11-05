@@ -13,8 +13,11 @@
     "prettier": "prettier --check .",
     "prettier-fix": "prettier --write .",
     "start": "ts-node -r tsconfig-paths/register src/server.ts",
-    "update-algolia": "yarn convert-html-to-json && yarn update-algolia-ub-node-index",
-    "update-algolia-ub-node-index": "ts-node -r tsconfig-paths/register scripts/update-algolia-ub-node-index.ts"
+    "update-algolia": "yarn update-algolia:dev",
+    "update-algolia:dev": "yarn convert-html-to-json && yarn update-algolia-ub-node-index dev_UB_NODE && yarn update-algolia-ub-node-index_settings dev_UB_NODE",
+    "update-algolia:prod": "yarn convert-html-to-json && yarn update-algolia-ub-node-index prod_UB_NODE && yarn update-algolia-ub-node-index_settings prod_UB_NODE",
+    "update-algolia-ub-node-index": "ts-node -r tsconfig-paths/register scripts/algolia_update_ub_node_index.ts",
+    "update-algolia-ub-node-index_settings": "ts-node -r tsconfig-paths/register scripts/algolia_update_ub_node_index_settings.ts"
   },
   "author": "@kelsonic",
   "license": "MIT",

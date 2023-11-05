@@ -8,8 +8,9 @@
       "@controllers/*": ["src/controllers/*"],
       "@data/*": ["src/data/*"],
       "@routes/*": ["src/routes/*"],
+      "@scripts/*": ["scripts/*"],
       "@services/*": ["src/services/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
     },
     "skipLibCheck": true,
     "strict": true,

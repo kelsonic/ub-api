@@ -7,14 +7,17 @@ dotenv.config();
 
 // Read the environment from the command line argument or default to 'prod'
 const args = process.argv.slice(2); // Skipping the first two args which are node binary and script path
-const envArg = args[0]; // Expecting the first argument to be the environment (dev or prod)
-const env = envArg === 'dev' ? 'dev' : 'prod';
-const indexName = `${env}_UB_NODE`;
+const indexName = args[0]; // Expecting the first argument to be the index name
+
+if (!indexName) {
+  console.error('Please specify the index name as a command line argument.');
+  process.exit(1);
+}
 
 // Configure Algolia
 const algoliaClient = algoliasearch(
   process.env.ALGOLIA_APP_ID!,
-  process.env.ALGOLIA_API_KEY!,
+  process.env.ALGOLIA_ADMIN_API_KEY!,
 );
 const index = algoliaClient.initIndex(indexName);
 
@@ -50,23 +53,14 @@ async function clearIndex() {
 async function addToIndex(objects: any[]) {
   try {
     // Add the new objects to the index
-    await index.saveObjects(objects, { autoGenerateObjectIDIfNotExist: true });
-    console.log(`Index ${indexName} has been created and populated.`);
+    const results = await index.saveObjects(objects, {
+      autoGenerateObjectIDIfNotExist: true,
+    });
+    console.log(
+      `Index ${indexName} has been created and populated with ${results.objectIDs.length} objects.`,
+    );
   } catch (error) {
     console.error('Error adding objects to the index:', error);
-  }
-}
-
-// Function to configure the index settings
-async function configureIndex() {
-  try {
-    await index.setSettings({
-      // Add any additional settings you need here
-      ranking: ['asc(sortId)'], // This will sort the search results based on sortId in ascending order
-    });
-    console.log(`Index ${indexName} settings configured.`);
-  } catch (error) {
-    console.error('Error configuring index settings:', error);
   }
 }
 
@@ -74,15 +68,18 @@ async function run() {
   // The path to the JSON file
   const jsonFilePath = path.resolve(__dirname, '../data/json/eng/index.json');
 
+  if (!fs.existsSync(jsonFilePath)) {
+    console.error(`File ${jsonFilePath} does not exist.`);
+    return;
+  }
+
   try {
     // Read the contents of the JSON file
-    const objects = await readJsonFile(jsonFilePath);
+    const results = await readJsonFile(jsonFilePath);
+    const objects = results[0];
 
     // Clear the current index (optional, if you want to start fresh)
     await clearIndex();
-
-    // Configure index settings before adding data
-    await configureIndex();
 
     // Add the new objects to the index
     await addToIndex(objects);
