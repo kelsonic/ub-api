@@ -22,18 +22,20 @@ async function updateIndexSettings(indexName: string) {
   try {
     await index.setSettings({
       searchableAttributes: ['text', 'title'],
+      attributesToHighlight: ['text', 'title', 'htmlText'],
       customRanking: ['asc(sortId)'],
       ranking: [
-        'typo',
-        'geo',
-        'words',
-        'filters',
-        'proximity',
-        'attribute',
-        'exact',
-        'custom',
+        'typo', // This makes it so that exact matches are ranked higher than partial matches
+        'geo', // This makes it so that results closer to the search location are ranked higher
+        'words', // This makes it so that results with more words are ranked higher
+        'filters', // This makes it so that results matching more filters are ranked higher
+        'proximity', // This makes it so that results closer to each other are ranked higher
+        'attribute', // This makes it so that results matching the query in the same attribute are ranked higher
+        'exact', // This makes it so that results matching the query exactly are ranked higher
+        'custom', // This makes it so that results matching the custom ranking are ranked higher
       ],
-      // Add other settings as needed...
+      highlightPreTag: '<em class="ub-api-highlighted-term">',
+      highlightPostTag: '</em>',
     });
     console.log(`Settings for index ${indexName} have been updated.`);
   } catch (error) {

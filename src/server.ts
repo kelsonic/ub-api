@@ -10,7 +10,7 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 // Relative modules.
 import logger from '@utils/logger';
-import urantiaBookRouter from '@routes/urantiaBook';
+import version1Router from '@routes/v1';
 
 const app = express();
 
@@ -29,7 +29,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Routes.
-app.use('/urantia-book', urantiaBookRouter);
+app.use('/v1', version1Router);
 app.get('/health', (req, res) => res.status(200).send('OK'));
 
 // Start the server.
