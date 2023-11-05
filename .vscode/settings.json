@@ -7,8 +7,10 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "cSpell.words": [
+    "algoliasearch",
     "beautifulsoup",
     "IIFE",
+    "kelsonic",
     "lxml",
     "pandoc"
   ],

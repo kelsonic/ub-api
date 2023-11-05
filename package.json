@@ -1,17 +1,20 @@
 {
   "name": "ub-api",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "An API that aggregates all characters, locations, and concepts from the Urantia Book",
   "main": "index.js",
   "engine": {
     "node": "16.17.0"
   },
   "scripts": {
+    "convert-html-to-json": "./scripts/convert-html-to-json.sh",
     "dev": "nodemon -r tsconfig-paths/register src/server.ts",
     "migrate": "npx prisma migrate dev",
     "prettier": "prettier --check .",
     "prettier-fix": "prettier --write .",
-    "start": "ts-node -r tsconfig-paths/register src/server.ts"
+    "start": "ts-node -r tsconfig-paths/register src/server.ts",
+    "update-algolia": "yarn convert-html-to-json && yarn update-algolia-ub-node-index",
+    "update-algolia-ub-node-index": "ts-node -r tsconfig-paths/register scripts/update-algolia-ub-node-index.ts"
   },
   "author": "@kelsonic",
   "license": "MIT",
@@ -19,8 +22,19 @@
     "@controllers": "dist/controllers",
     "@middleware": "dist/middleware",
     "@routes": "dist/routes",
+    "@scripts": "dist/scripts",
     "@services": "dist/services",
     "@utils": "dist/utils"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "dependencies": {
     "@prisma/client": "^5.5.0",
@@ -48,15 +62,5 @@
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "prettier": "^3.0.3"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "prettier --write"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }
