@@ -55,7 +55,8 @@ with open(combined_file, 'r') as f1:
 with open(json_file, 'r') as f2:
     data2 = json.load(f2)
 
-data1.append(data2)
+# Extend data1 with data2 instead of appending
+data1.extend(data2)
 
 with open(combined_file, 'w') as f1:
     json.dump(data1, f1, indent=2)

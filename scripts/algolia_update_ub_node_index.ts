@@ -75,8 +75,7 @@ async function run() {
 
   try {
     // Read the contents of the JSON file
-    const results = await readJsonFile(jsonFilePath);
-    const objects = results[0];
+    const objects = await readJsonFile(jsonFilePath);
 
     // Clear the current index (optional, if you want to start fresh)
     await clearIndex();
