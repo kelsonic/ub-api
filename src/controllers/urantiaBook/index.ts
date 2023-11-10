@@ -4,6 +4,7 @@ import { SearchClient, SearchIndex } from 'algoliasearch';
 // Relative modules.
 import logger from '@utils/logger';
 import { enforceString, enforceStringNumber } from '@utils/typeUtils';
+import { standardApiResponse } from '@utils/apiResponse';
 
 export class UrantiaBookController {
   private algoliaClient: SearchClient;
@@ -33,11 +34,13 @@ export class UrantiaBookController {
       logger.info(`Search performed with paperId: ${paperId}`);
 
       // Send back the results
-      res.json(searchResult);
+      standardApiResponse(res, 200, {
+        data: searchResult,
+      });
     } catch (error) {
       // Log and handle errors
       logger.error(`Search failed: ${error}`);
-      res.status(500).send({
+      standardApiResponse(res, 500, {
         error: 'Search failed, please try again.',
       });
     }
@@ -62,11 +65,13 @@ export class UrantiaBookController {
       logger.info(`Search performed with sectionId: ${sectionId}`);
 
       // Send back the results
-      res.json(searchResult);
+      standardApiResponse(res, 200, {
+        data: searchResult,
+      });
     } catch (error) {
       // Log and handle errors
       logger.error(`Search failed: ${error}`);
-      res.status(500).send({
+      standardApiResponse(res, 500, {
         error: 'Search failed, please try again.',
       });
     }
@@ -91,11 +96,13 @@ export class UrantiaBookController {
       logger.info(`Search performed with paragraphId: ${paragraphId}`);
 
       // Send back the results
-      res.json(searchResult);
+      standardApiResponse(res, 200, {
+        data: searchResult,
+      });
     } catch (error) {
       // Log and handle errors
       logger.error(`Search failed: ${error}`);
-      res.status(500).send({
+      standardApiResponse(res, 500, {
         error: 'Search failed, please try again.',
       });
     }
@@ -120,11 +127,13 @@ export class UrantiaBookController {
       logger.info(`Search performed with globalId: ${globalId}`);
 
       // Send back the results
-      res.json(searchResult);
+      standardApiResponse(res, 200, {
+        data: searchResult,
+      });
     } catch (error) {
       // Log and handle errors
       logger.error(`Search failed: ${error}`);
-      res.status(500).send({
+      standardApiResponse(res, 500, {
         error: 'Search failed, please try again.',
       });
     }
@@ -160,17 +169,19 @@ export class UrantiaBookController {
       );
 
       // Send back the results
-      res.json(searchResult);
+      standardApiResponse(res, 200, {
+        data: searchResult,
+      });
     } catch (error) {
       // Log and handle errors
       logger.error(`Search failed: ${error}`);
-      res.status(500).send({
+      standardApiResponse(res, 500, {
         error: 'Search failed, please try again.',
       });
     }
   };
 
-  private prepareSearchIndex = async () => {
+  private prepareSearchIndex = async (): Promise<SearchIndex> => {
     // Check if the index exists
     const indexExists = await this.algoliaClient
       .listIndices()

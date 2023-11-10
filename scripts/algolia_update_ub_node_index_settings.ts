@@ -36,6 +36,16 @@ async function updateIndexSettings(indexName: string) {
       ],
       highlightPreTag: '<em class="ub-api-highlighted-term">',
       highlightPostTag: '</em>',
+      attributesForFaceting: [
+        'globalId',
+        'language',
+        'paperId',
+        'paperSectionId',
+        'paperSectionParagraphId',
+        'paragraphId',
+        'sectionId',
+        'type',
+      ],
     });
     console.log(`Settings for index ${indexName} have been updated.`);
   } catch (error) {
