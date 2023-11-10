@@ -18,6 +18,13 @@ const ubNodeIndexName = process.env.ALGOLIA_UB_NODE_INDEX_NAME as string;
 const controller = new UrantiaBookController(algoliaClient, ubNodeIndexName);
 
 // Routes.
+router.get('/papers/:paperId', controller.getPaper);
+router.get('/papers/:paperId/sections/:sectionId', controller.getPaperSection);
+router.get(
+  '/papers/:paperId/sections/:sectionId/paragraphs/:paragraphId',
+  controller.getParagraph,
+);
+router.get('/nodes/:globalId', controller.getNode);
 router.get('/search', controller.search);
 
 export default router;
